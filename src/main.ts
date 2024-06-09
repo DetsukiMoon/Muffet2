@@ -4,20 +4,22 @@ function addInt(int:number): void {
 }
 addInt(25)
 console.log(tesInt)
-import Fastify, { FastifyInstance } from "fastify"
-
-const fastify: FastifyInstance = Fastify({
-  logger: true
+import MuffetClient from "./muffetClient/muffetClient.js"
+import MuffetAPI from "./muffetAPI/muffetAPI.js"
+import { IntentsBitField } from "discord.js"
+const muffetClient = new MuffetClient({
+  token: process.env['muffetTOKEN'] as string,
+  intents: [
+    IntentsBitField.Flags.Guilds,
+    IntentsBitField.Flags.GuildMessages,
+    IntentsBitField.Flags.MessageContent,
+    IntentsBitField.Flags.GuildMembers
+  ]
 })
+const muffetAPI = new MuffetAPI({port:8080, muffetClient: muffetClient})
+await muffetAPI.init()
+await muffetClient.init()
 
-fastify.get('/', (request, reply) => {
-  return {
-    meow:'Meoooooowww'
-  }
-})
-
-fastify.listen({port:8080}, (err, addr) => {
-  if(err) {
-    console.log(err, addr)
-  }
+muffetClient.on('ready', () => {
+  console.log(muffetClient.isReady())
 })
