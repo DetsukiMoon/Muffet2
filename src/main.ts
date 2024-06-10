@@ -16,8 +16,8 @@ const muffetClient = new MuffetClient({
     IntentsBitField.Flags.GuildMembers
   ]
 })
-const muffetAPI = new MuffetAPI({port:8080, muffetClient: muffetClient})
-await muffetAPI.init()
+const muffetAPI:MuffetAPI = new MuffetAPI({port:8080, muffetClient: muffetClient})
+muffetAPI.init()
 await muffetClient.init()
 
 muffetClient.on('ready', () => {
